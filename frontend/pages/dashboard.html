@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dialectica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/styles/styles.css">    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: http://localhost:5000; connect-src 'self' http://localhost:5000; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https://via.placeholder.com https://upload.wikimedia.org https://*.placeholder.com;">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="logo-container">
+                    <div class="logo-shape shape-1"></div>
+                    <div class="logo-shape shape-2"></div>
+                </div>
+                <span class="ms-2 brand-text">Dialectica</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="debates.html">Debates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="me-3" id="userGreeting">Welcome!</span>
+                    <button id="logoutBtn" class="btn btn-outline-danger">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col">
+                <h1>Your Dashboard</h1>
+                <p class="lead">Manage your debates and see your upcoming events.</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary" id="createDebateBtn">
+                    <i class="fas fa-plus me-2"></i> Create Debate
+                </button>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalDebates">0</h3>
+                        <p>Total Debates</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="upcomingDebates">0</h3>
+                        <p>Upcoming Debates</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="dashboard-stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="judgedDebates">0</h3>
+                        <p>Judged Debates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Your Upcoming Debates</h5>
+                        <a href="debates.html" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="upcomingDebatesList" class="debate-list">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-action-list">
+                            <a href="#" class="quick-action-item" id="joinDebateBtn">
+                                <div class="quick-action-icon">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h5>Join Debate</h5>
+                                    <p>Enter a debate access code</p>
+                                </div>
+                            </a>
+                            <a href="#" class="quick-action-item" id="browseDebatesBtn">
+                                <div class="quick-action-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h5>Browse Debates</h5>
+                                    <p>Find public debates to join</p>
+                                </div>
+                            </a>
+                            <a href="#" class="quick-action-item" id="viewProfileBtn">
+                                <div class="quick-action-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h5>Update Profile</h5>
+                                    <p>Edit your information</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Debate Modal -->
+    <div class="modal fade" id="joinDebateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Join Debate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="joinDebateForm">
+                        <div class="mb-3">
+                            <label for="accessCode" class="form-label">Access Code</label>
+                            <input type="text" class="form-control" id="accessCode" placeholder="Enter debate access code" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="joinRole" class="form-label">Join as</label>
+                            <select class="form-select" id="joinRole" required>
+                                <option value="">Select role...</option>
+                                <option value="participant">Participant</option>
+                                <option value="judge">Judge</option>
+                                <option value="audience">Audience</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="positionSelectContainer" style="display: none;">
+                            <label for="position" class="form-label">Position</label>
+                            <select class="form-select" id="position">
+                                <option value="for">For the Motion</option>
+                                <option value="against">Against the Motion</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="joinDebateSubmitBtn">Join</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Debate Modal -->
+    <div class="modal fade" id="createDebateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Debate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createDebateForm">
+                        <div class="mb-3">
+                            <label for="debateTitle" class="form-label">Debate Title</label>
+                            <input type="text" class="form-control" id="debateTitle" placeholder="Enter a title for your debate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="debateTopic" class="form-label">Topic</label>
+                            <input type="text" class="form-control" id="debateTopic" placeholder="Enter the debate topic" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="debateDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="debateDescription" rows="3" placeholder="Describe the debate"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="debateFormat" class="form-label">Format</label>
+                                <select class="form-select" id="debateFormat" required>
+                                    <option value="lincoln-douglas">Lincoln-Douglas</option>
+                                    <option value="policy">Policy</option>
+                                    <option value="parliamentary">Parliamentary</option>
+                                    <option value="public-forum">Public Forum</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="debateDuration" class="form-label">Duration (minutes)</label>
+                                <input type="number" class="form-control" id="debateDuration" value="60" min="10" max="180" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="debateSpeechTime" class="form-label">Speech Time Limit (seconds)</label>
+                                <input type="number" class="form-control" id="debateSpeechTime" value="120" min="30" max="600" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="debateScheduled" class="form-label">Scheduled Time</label>
+                                <input type="datetime-local" class="form-control" id="debateScheduled" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="debateIsPublic" checked>
+                                <label class="form-check-label" for="debateIsPublic">
+                                    Public debate (anyone can join)
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="createDebateSubmitBtn">Create Debate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/frontend/scripts/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // DOM elements
+            const userGreeting = document.getElementById('userGreeting');
+            const totalDebatesEl = document.getElementById('totalDebates');
+            const upcomingDebatesEl = document.getElementById('upcomingDebates');
+            const judgedDebatesEl = document.getElementById('judgedDebates');
+            const upcomingDebatesList = document.getElementById('upcomingDebatesList');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const createDebateBtn = document.getElementById('createDebateBtn');
+            const joinDebateBtn = document.getElementById('joinDebateBtn');
+            const browseDebatesBtn = document.getElementById('browseDebatesBtn');
+            const viewProfileBtn = document.getElementById('viewProfileBtn');
+            
+            // Modals
+            const joinDebateModal = new bootstrap.Modal(document.getElementById('joinDebateModal'));
+            const createDebateModal = new bootstrap.Modal(document.getElementById('createDebateModal'));
+            
+            // Set current date as min for scheduled time
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('debateScheduled').min = now.toISOString().slice(0, 16);
+            document.getElementById('debateScheduled').value = now.toISOString().slice(0, 16);
+            
+            // Initialize dashboard
+            initDashboard();
+            
+            // Event listeners
+            logoutBtn.addEventListener('click', handleLogout);
+            createDebateBtn.addEventListener('click', () => createDebateModal.show());
+            joinDebateBtn.addEventListener('click', () => joinDebateModal.show());
+            browseDebatesBtn.addEventListener('click', () => window.location.href = '/debates.html');
+            viewProfileBtn.addEventListener('click', () => window.location.href = '/profile.html');
+            
+            // Join role change
+            document.getElementById('joinRole').addEventListener('change', function() {
+                const positionContainer = document.getElementById('positionSelectContainer');
+                positionContainer.style.display = this.value === 'participant' ? 'block' : 'none';
+            });
+            
+            // Join debate form submit
+            document.getElementById('joinDebateSubmitBtn').addEventListener('click', handleJoinDebate);
+            
+            // Create debate form submit
+            document.getElementById('createDebateSubmitBtn').addEventListener('click', handleCreateDebate);
+            
+            // Initialize dashboard
+            async function initDashboard() {
+                try {
+                    // Get current user
+                    const user = await API.auth.getCurrentUser(token);
+                    userGreeting.textContent = `Welcome, ${user.name}!`;
+                    
+                    // Load debates
+                    loadDebates();
+                } catch (error) {
+                    console.error('Dashboard initialization error:', error);
+                    if (error.message === 'Token is not valid') {
+                        handleLogout();
+                    }
+                }
+            }
+            
+            // Load debates
+            async function loadDebates() {
+                try {
+                    // Get user's debates
+                    const myDebatesResponse = await API.debates.getDebates(token, 'my');
+                    const myDebates = myDebatesResponse.debates;
+                    
+                    // Get upcoming debates
+                    const upcomingDebatesResponse = await API.debates.getDebates(token, 'upcoming');
+                    const upcomingDebates = upcomingDebatesResponse.debates;
+                    
+                    // Get judged debates
+                    const judgingDebatesResponse = await API.debates.getDebates(token, 'judging');
+                    const judgingDebates = judgingDebatesResponse.debates;
+                    
+                    // Update stats
+                    totalDebatesEl.textContent = myDebates.length;
+                    upcomingDebatesEl.textContent = upcomingDebates.length;
+                    judgedDebatesEl.textContent = judgingDebates.length;
+                    
+                    // Update upcoming debates list
+                    renderUpcomingDebates(upcomingDebates);
+                } catch (error) {
+                    console.error('Error loading debates:', error);
+                    upcomingDebatesList.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load debates. Please try again later.
+                        </div>
+                    `;
+                }
+            }
+            
+            // Render upcoming debates
+            function renderUpcomingDebates(debates) {
+                if (debates.length === 0) {
+                    upcomingDebatesList.innerHTML = `
+                        <div class="text-center py-4">
+                            <p class="text-muted">You don't have any upcoming debates.</p>
+                            <button class="btn btn-outline-primary" id="createDebateFromEmptyBtn">
+                                <i class="fas fa-plus me-2"></i> Create Your First Debate
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('createDebateFromEmptyBtn').addEventListener('click', () => createDebateModal.show());
+                    return;
+                }
+                
+                upcomingDebatesList.innerHTML = '';
+                
+                debates.slice(0, 5).forEach(debate => {
+                    const debateDate = new Date(debate.scheduledTime);
+                    const formattedDate = debateDate.toLocaleDateString();
+                    const formattedTime = debateDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    const debateItem = document.createElement('div');
+                    debateItem.className = 'debate-item';
+                    debateItem.innerHTML = `
+                        <div class="debate-item-content">
+                            <h5>${debate.title}</h5>
+                            <p class="debate-topic">${debate.topic}</p>
+                            <div class="debate-meta">
+                                <span class="debate-date">
+                                    <i class="fas fa-calendar-alt me-1"></i> ${formattedDate} at ${formattedTime}
+                                </span>
+                                <span class="debate-status ${debate.status}">
+                                    ${debate.status.charAt(0).toUpperCase() + debate.status.slice(1)}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="debate-item-actions">
+                            <a href="/debate.html?id=${debate._id}" class="btn btn-sm btn-primary">Enter</a>
+                        </div>
+                    `;
+                    
+                    upcomingDebatesList.appendChild(debateItem);
+                });
+            }
+            
+            // Handle join debate
+            async function handleJoinDebate() {
+                const accessCode = document.getElementById('accessCode').value;
+                const role = document.getElementById('joinRole').value;
+                const position = document.getElementById('position').value;
+                
+                if (!accessCode || !role) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                if (role === 'participant' && !position) {
+                    alert('Please select a position');
+                    return;
+                }
+                
+                try {
+                    // This is a simplified version - in a real app, you would first query for the debate ID using the access code
+                    // For demo purposes, we'll just show a success message
+                    alert(`Successfully joined debate with access code: ${accessCode}`);
+                    joinDebateModal.hide();
+                } catch (error) {
+                    alert(`Error joining debate: ${error.message}`);
+                }
+            }
+            
+            // Handle create debate
+            async function handleCreateDebate() {
+                const title = document.getElementById('debateTitle').value;
+                const topic = document.getElementById('debateTopic').value;
+                const description = document.getElementById('debateDescription').value;
+                const format = document.getElementById('debateFormat').value;
+                const duration = document.getElementById('debateDuration').value;
+                const speechTimeLimit = document.getElementById('debateSpeechTime').value;
+                const scheduledTime = document.getElementById('debateScheduled').value;
+                const isPublic = document.getElementById('debateIsPublic').checked;
+                
+                if (!title || !topic || !format || !duration || !speechTimeLimit || !scheduledTime) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                try {
+                    const debateData = {
+                        title,
+                        topic,
+                        description,
+                        format,
+                        duration: parseInt(duration),
+                        speechTimeLimit: parseInt(speechTimeLimit),
+                        scheduledTime: new Date(scheduledTime).toISOString(),
+                        isPublic
+                    };
+                    
+                    const newDebate = await API.debates.createDebate(token, debateData);
+                    
+                    alert('Debate created successfully!');
+                    createDebateModal.hide();
+                    
+                    // Reload debates
+                    loadDebates();
+                } catch (error) {
+                    alert(`Error creating debate: ${error.message}`);
+                }
+            }
+            
+            // Handle logout
+            function handleLogout() {
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            }
+        });
+    </script>
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(23, 162, 184, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .stat-icon i {
+            color: var(--accent);
+            font-size: 24px;
+        }
+        
+        .stat-content h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .stat-content p {
+            margin-bottom: 0;
+            color: var(--gray);
+        }
+        
+        .debate-list {
+            min-height: 300px;
+        }
+        
+        .debate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .debate-item:last-child {
+            border-bottom: none;
+        }
+        
+        .debate-topic {
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .debate-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .debate-date {
+            color: var(--gray);
+            margin-right: 15px;
+        }
+        
+        .debate-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .debate-status.scheduled {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: var(--accent);
+        }
+        
+        .debate-status.active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .debate-status.completed {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--gray);
+        }
+        
+        .debate-status.cancelled {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .quick-action-list {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quick-action-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .quick-action-item:hover {
+            background-color: rgba(23, 162, 184, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .quick-action-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(23, 162, 184, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .quick-action-icon i {
+            color: var(--accent);
+            font-size: 20px;
+        }
+        
+        .quick-action-content h5 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .quick-action-content p {
+            margin-bottom: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <!--
+        Redirect to the correct dashboard path if accessed from the root
+    -->
+    <script>
+        if (window.location.pathname === '/dashboard.html') {
+            window.location.replace('/frontend/pages/dashboard.html');
+        }
+    </script>
+</body>
+</html>

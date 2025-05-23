@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb://127.0.0.1:27017/dialectica",
+  "jwtSecret": "your_jwt_secret_key",
+  "jwtExpiration": 3600,
+  "port": 5000
+}

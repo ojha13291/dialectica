@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Dialectica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">    <link rel="stylesheet" href="/frontend/styles/styles.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: http://localhost:5000; connect-src 'self' http://localhost:5000; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https://via.placeholder.com https://upload.wikimedia.org https://*.placeholder.com;">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/frontend/pages/index.html">
+                <div class="logo-container">
+                    <div class="logo-shape shape-1"></div>
+                    <div class="logo-shape shape-2"></div>
+                </div>
+                <span class="ms-2 brand-text">Dialectica</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="features.html">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="/frontend/pages/login.html" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="/frontend/pages/signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="container auth-container">
+        <div class="auth-form-container">
+            <div class="text-center mb-4">
+                <div class="logo-container mx-auto">
+                    <div class="logo-shape shape-1"></div>
+                    <div class="logo-shape shape-2"></div>
+                </div>
+                <h2 class="mt-2 mb-0">Dialectica</h2>
+                <p class="text-muted">Where Reason Resonates</p>
+            </div>
+
+            <h3 class="auth-title">Log in to your account</h3>
+
+            <div id="alert-container"></div>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="you@example.com" autocomplete="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label d-flex justify-content-between">
+                        <span>Password</span>
+                        <a href="forgot-password.html" class="text-primary">Forgot password?</a>
+                    </label>
+                    <input type="password" class="form-control" id="password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-3">Log in</button>
+            </form>
+
+            <div class="divider my-4">
+                <span>OR</span>
+            </div>
+
+            <button class="btn btn-outline-secondary w-100 google-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"
+                    width="18" height="18">
+                Continue with Google
+            </button>
+
+            <p class="text-center mt-4">
+                Don't have an account? <a href="/frontend/pages/signup.html" class="text-primary">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/frontend/scripts/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const alertContainer = document.getElementById('alert-container');
+
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = '/frontend/pages/dashboard.html';
+                return;
+            }
+
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // Show loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
+
+                    // Call login API
+                    const response = await API.auth.login(email, password);
+
+                    // Store token
+                    localStorage.setItem('token', response.token);
+
+                    // Redirect to dashboard
+                    window.location.href = '/frontend/pages/dashboard.html';
+                } catch (error) {
+                    // Show error
+                    showAlert(error.message || 'Login failed. Please check your credentials.', 'danger');
+
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Log in';
+                }
+            });
+
+            // Google login button (demo only)
+            document.querySelector('.google-btn').addEventListener('click', function () {
+                showAlert('Google login is not implemented in this demo.', 'warning');
+            });
+
+            // Helper function to show alerts
+            function showAlert(message, type) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

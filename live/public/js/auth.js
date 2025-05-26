@@ -1,0 +1,87 @@
+document.addEventListener('DOMContentLoaded', function() {
+    function checkAuth() {
+        const token = localStorage.getItem('dialectica_token');
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        const authRequiredPages = ['debate.html', 'dashboard.html'];
+        
+        if (!token && authRequiredPages.includes(currentPage)) {
+            localStorage.setItem('dialectica_redirect', currentPage);
+            window.location.href = 'login.html';
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function initializeSocketWithAuth() {
+        const token = localStorage.getItem('dialectica_token');
+        
+        if (!token) {
+            console.error('No authentication token found');
+            return null;
+        }
+        
+        const socketUrl = window.appConfig ? window.appConfig.socketUrl : 'http://localhost:5000';
+        const socket = io(socketUrl, {
+            transports: ['websocket', 'polling'],
+            reconnectionAttempts: 5,
+            auth: {
+                token: token
+            }
+        });
+        
+        socket.on('connect_error', (err) => {
+            console.error('Socket connection error:', err.message);
+            
+            if (err.message.includes('Authentication error')) {
+                localStorage.removeItem('dialectica_token');
+                localStorage.removeItem('dialectica_user');
+                
+                const currentPage = window.location.pathname.split('/').pop();
+                localStorage.setItem('dialectica_redirect', currentPage);
+                
+                alert('Your session has expired. Please log in again.');
+                window.location.href = 'login.html';
+            }
+        });
+        
+        return socket;
+    }
+    
+    function isAdmin() {
+        const userStr = localStorage.getItem('dialectica_user');
+        if (!userStr) return false;
+        
+        try {
+            const user = JSON.parse(userStr);
+            return user && user.isAdmin === true;
+        } catch (err) {
+            console.error('Error parsing user data:', err);
+            return false;
+        }
+    }
+    
+    function checkAdminAccess() {
+        const adminPages = ['admin.html', 'admin-dashboard.html'];
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        if (adminPages.includes(currentPage) && !isAdmin()) {
+            alert('Admin access required');
+            window.location.href = 'index.html';
+            return false;
+        }
+        
+        return true;
+    }
+    
+    window.authUtils = {
+        checkAuth,
+        initializeSocketWithAuth,
+        isAdmin,
+        checkAdminAccess
+    };
+    
+    // Run auth check on page load
+    checkAuth();
+});

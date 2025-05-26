@@ -82,6 +82,5 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAdminAccess
     };
     
-    // Run auth check on page load
     checkAuth();
 });

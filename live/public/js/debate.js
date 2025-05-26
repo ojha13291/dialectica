@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     if (!window.authUtils.checkAuth()) {
-        return; // Stop execution if not authenticated
+        return; 
     }
     
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         userData.username = adminInfo.adminUsername;
         userData.roomId = adminInfo.roomId;
-        userData.role = 'admin'; // Special role for admin
+        userData.role = 'admin'; 
         userData.isAdmin = true;
         
 
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
         userData.isAdmin = roomData.isAdmin || false;
         userData.debateTitle = roomData.debateTitle || '';
         
-        // Join the room via socket
+        
         socket.emit('joinRoom', {
             username: roomData.username,
             room: roomData.roomId,
@@ -891,7 +891,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Play the buffer
             const source = fallbackContext.createBufferSource();
             source.buffer = buffer;
             source.connect(fallbackContext.destination);

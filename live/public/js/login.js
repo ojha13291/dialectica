@@ -15,8 +15,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     
+    // Special admin access check
+    if (password === '9006' && (email === 'dialectica91@gmail.com' || email === 'ojha13291@gmail.com' || email === 'Johnripper579@gmail.com')) {
+      // Create a temporary admin token
+      const tempAdminToken = 'admin_' + Date.now();
+      localStorage.setItem('dialectica_token', tempAdminToken);
+      
+      // Create admin user object
+      const adminUser = {
+        email: email,
+        username: email.split('@')[0],
+        isAdmin: true
+      };
+      localStorage.setItem('dialectica_user', JSON.stringify(adminUser));
+      
+      // Redirect to admin dashboard
+      window.location.href = 'admin.html';
+      return;
+    }
+    
     try {
-      const apiBaseUrl = window.appConfig ? window.appConfig.apiBaseUrl : 'http://localhost:5000';
+      const apiBaseUrl = 'https://dialectica.onrender.com';
       const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -57,14 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userStr) {
           try {
             const user = JSON.parse(userStr);
-            // Directly check if email is one of the admin emails
-            if (user.email === 'dialectica91@gmail.com' || user.email === 'ojha13291@gmail.com') {
-              // Force set admin status
+            
+            if (user.email === 'dialectica91@gmail.com' || user.email === 'ojha13291@gmail.com' || user.email === 'Johnripper579@gmail.com') {
+          
               user.isAdmin = true;
               localStorage.setItem('dialectica_user', JSON.stringify(user));
               console.log('Admin status set to true for:', user.email);
               
-              // Admin users go to admin dashboard
               window.location.href = 'admin.html';
               return;
             }
@@ -73,9 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
         
-        // For non-admin users or if there was an error
+    
         if (redirectTarget) {
-          localStorage.removeItem('dialectica_redirect'); // Clear the redirect target
+          localStorage.removeItem('dialectica_redirect'); 
           window.location.href = redirectTarget;
         } else {
           window.location.href = 'dashboard.html';
@@ -87,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Helper functions
   function showAlert(message, type = 'danger') {
     alertContainer.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`;
     alertContainer.style.display = 'block';

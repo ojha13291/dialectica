@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     try {
-      const apiBaseUrl = window.appConfig ? window.appConfig.apiBaseUrl : 'http://localhost:5000';
+      const apiBaseUrl = 'https://dialectica.onrender.com';
       const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Helper functions
   function showAlert(message, type = 'danger') {
     alertContainer.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`;
     alertContainer.style.display = 'block';

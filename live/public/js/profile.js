@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
     if (!window.authUtils.checkAuth()) {
-        return; // Stop execution if not authenticated
+        return; 
     }
     
     
@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         };
         
         try {
-            const response = await fetch('http://localhost:5000/api/profile', {
+            const apiBaseUrl = 'https://dialectica.onrender.com';
+            const response = await fetch(`${apiBaseUrl}/api/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             updateAvatarPreview(base64Image);
             
-            const response = await fetch('http://localhost:5000/api/profile/avatar', {
+            const response = await fetch('https://dialectica.onrender.com/api/profile/avatar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +127,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     
     async function fetchProfileData() {
-        const response = await fetch('http://localhost:5000/api/profile', {
+        const apiBaseUrl = 'https://dialectica.onrender.com';
+        const response = await fetch(`${apiBaseUrl}/api/profile`, {
             method: 'GET',
             headers: {
                 'x-auth-token': token
@@ -144,7 +146,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     async function fetchUserStats() {
         try {
-            const response = await fetch('http://localhost:5000/api/stats', {
+            const apiBaseUrl = 'https://dialectica.onrender.com';
+            const response = await fetch(`${apiBaseUrl}/api/stats`, {
                 method: 'GET',
                 headers: {
                     'x-auth-token': token

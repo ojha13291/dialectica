@@ -255,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
 
-                // Add modal to DOM and show it
                 const modalContainer = document.createElement('div');
                 modalContainer.innerHTML = modalHtml;
                 document.body.appendChild(modalContainer);
@@ -263,12 +262,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modal = new bootstrap.Modal(document.getElementById('userDetailModal'));
                 modal.show();
 
-                // Remove modal from DOM when hidden
                 document.getElementById('userDetailModal').addEventListener('hidden.bs.modal', function () {
                     document.body.removeChild(modalContainer);
                 });
-
-                // Add event listeners for block/unblock buttons
                 const blockUserBtn = document.getElementById('blockUserBtn');
                 const unblockUserBtn = document.getElementById('unblockUserBtn');
                 
@@ -322,16 +318,13 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Add modal to DOM
         const modalContainer = document.createElement('div');
         modalContainer.innerHTML = blockModalHtml;
         document.body.appendChild(modalContainer);
         
-        // Show the modal
         const blockModal = new bootstrap.Modal(document.getElementById('blockUserConfirmModal'));
         blockModal.show();
         
-        // Add event listener for confirm button
         document.getElementById('confirmBlockBtn').addEventListener('click', () => {
             const reason = document.getElementById('blockReason').value.trim();
             blockUser(userId, reason);
@@ -349,16 +342,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ userId, reason })
             });
             
-            // Close the user details modal
             const userDetailModal = bootstrap.Modal.getInstance(document.getElementById('userDetailModal'));
             if (userDetailModal) {
                 userDetailModal.hide();
             }
             
-            // Show success message
             alert('User has been blocked successfully.');
             
-            // Reload users data to reflect changes
             loadUsersData();
             
         } catch (err) {
@@ -381,16 +371,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ userId })
             });
             
-            // Close the user details modal
             const userDetailModal = bootstrap.Modal.getInstance(document.getElementById('userDetailModal'));
             if (userDetailModal) {
                 userDetailModal.hide();
             }
             
-            // Show success message
             alert('User has been unblocked successfully.');
             
-            // Reload users data to reflect changes
             loadUsersData();
             
         } catch (err) {
@@ -412,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             alert(response.msg || 'User promoted to admin successfully');
-            loadUsersData(); // Reload users data
+            loadUsersData();
         } catch (err) {
             console.error('Error promoting user:', err);
             alert('Error promoting user: ' + err.message);
@@ -424,15 +411,12 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const rooms = await fetchWithAuth('/api/admin/rooms');
             
-            // Also populate the active rooms dropdown in the quick join section
             const activeRoomsSelect = document.getElementById('activeRoomsSelect');
             if (activeRoomsSelect) {
-                // Clear existing options except the first one
                 while (activeRoomsSelect.options.length > 1) {
                     activeRoomsSelect.remove(1);
                 }
                 
-                // Add rooms to the dropdown
                 rooms.forEach(room => {
                     const option = document.createElement('option');
                     option.value = room.roomId;
@@ -450,7 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Generate room cards
             let roomsHtml = '';
             rooms.forEach(room => {
                 const participantsCount = room.participants.length;
@@ -692,10 +675,8 @@ document.addEventListener('DOMContentLoaded', function() {
         activeRoomsSelect.addEventListener('change', () => {
             const selectedRoomId = activeRoomsSelect.value;
             if (selectedRoomId) {
-                // Auto-fill the room ID input
                 quickJoinRoomId.value = selectedRoomId;
                 
-                // Option to auto-join when a room is selected
                 if (confirm('Would you like to join this room now?')) {
                     joinRoom(selectedRoomId);
                 }
@@ -703,15 +684,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Quick join room - button click
     quickJoinRoomBtn.addEventListener('click', () => {
-        // First check if a room is selected in the dropdown
         if (activeRoomsSelect && activeRoomsSelect.value) {
             joinRoom(activeRoomsSelect.value);
             return;
         }
         
-        // Otherwise use the manual input
         const roomId = quickJoinRoomId.value.trim();
         if (!roomId) {
             alert('Please select a room from the dropdown or enter a room ID');
@@ -720,16 +698,13 @@ document.addEventListener('DOMContentLoaded', function() {
         joinRoom(roomId);
     });
 
-    // Refresh button event listeners
     refreshDashboard.addEventListener('click', loadDashboardData);
     refreshUsers.addEventListener('click', loadUsersData);
     refreshRooms.addEventListener('click', loadRoomsData);
     refreshStats.addEventListener('click', () => {
         loadActivityLogs();
-        // Reload charts if needed
     });
 
-    // Initialize admin dashboard
     loadDashboardData();
     loadUsersData();
     loadRoomsData();

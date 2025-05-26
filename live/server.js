@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.NODE_ENV === 'production' ? ["https://dialectica-app.onrender.com", "https://dialectica.onrender.com"] : "*",
+    origin: process.env.NODE_ENV === 'production' ? ["https://your-app-name.onrender.com"] : "*",
     methods: ["GET", "POST"],
     credentials: true
   }

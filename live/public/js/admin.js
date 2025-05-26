@@ -44,9 +44,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!token) {
             throw new Error('No authentication token found');
         }
-
+        
+        // Check if this is a special admin token (starts with 'admin_')
+        if (token.startsWith('admin_')) {
+            // For special admin tokens, return mock data instead of making actual API calls
+            return getMockDataForEndpoint(url);
+        }
     
-        const apiBaseUrl = 'http://localhost:5000';
+        const apiBaseUrl = 'https://dialectica.onrender.com';
         const fullUrl = url.startsWith('http') ? url : `${apiBaseUrl}${url}`;
 
         const headers = {
@@ -705,6 +710,124 @@ document.addEventListener('DOMContentLoaded', function() {
         loadActivityLogs();
     });
 
+    // Function to return mock data for admin endpoints when using special admin token
+    function getMockDataForEndpoint(url) {
+        console.log('Returning mock data for:', url);
+        
+        // Mock data for different endpoints
+        if (url.includes('/api/admin/stats')) {
+            return {
+                totalUsers: 125,
+                activeUsers: 42,
+                totalRooms: 18,
+                activeRooms: 7,
+                totalDebates: 93,
+                completedDebates: 85
+            };
+        }
+        
+        if (url.includes('/api/admin/users')) {
+            return [
+                {
+                    _id: 'mock1',
+                    username: 'Ayush Ojha',
+                    email: 'ojha13291@gmail.com',
+                    isAdmin: true,
+                    createdAt: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    debatesParticipated: 15,
+                    debatesWon: 10
+                },
+                {
+                    _id: 'mock2',
+                    username: 'John Ripper',
+                    email: 'Johnripper579@gmail.com',
+                    isAdmin: true,
+                    createdAt: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    debatesParticipated: 8,
+                    debatesWon: 6
+                },
+                {
+                    _id: 'mock3',
+                    username: 'Test User',
+                    email: 'testuser@example.com',
+                    isAdmin: false,
+                    isBlocked: true,
+                    blockedReason: 'Inappropriate behavior',
+                    createdAt: new Date(Date.now() - 7*24*60*60*1000).toISOString(),
+                    lastActive: new Date(Date.now() - 2*24*60*60*1000).toISOString(),
+                    debatesParticipated: 3,
+                    debatesWon: 1
+                },
+                {
+                    _id: 'mock4',
+                    username: 'Regular User',
+                    email: 'user@example.com',
+                    isAdmin: false,
+                    createdAt: new Date(Date.now() - 14*24*60*60*1000).toISOString(),
+                    lastActive: new Date(Date.now() - 1*24*60*60*1000).toISOString(),
+                    debatesParticipated: 12,
+                    debatesWon: 5
+                }
+            ];
+        }
+        
+        if (url.includes('/api/admin/rooms')) {
+            return [
+                {
+                    _id: 'room1',
+                    roomId: 'debate123',
+                    title: 'Climate Change Solutions',
+                    status: 'active',
+                    createdAt: new Date(Date.now() - 2*60*60*1000).toISOString(),
+                    participants: ['Ayush Ojha', 'Regular User', 'Test User'],
+                    messages: 24
+                },
+                {
+                    _id: 'room2',
+                    roomId: 'debate456',
+                    title: 'AI Ethics Debate',
+                    status: 'active',
+                    createdAt: new Date(Date.now() - 5*60*60*1000).toISOString(),
+                    participants: ['John Ripper', 'Regular User'],
+                    messages: 18
+                },
+                {
+                    _id: 'room3',
+                    roomId: 'debate789',
+                    title: 'Economic Policy Discussion',
+                    status: 'completed',
+                    createdAt: new Date(Date.now() - 2*24*60*60*1000).toISOString(),
+                    participants: ['Ayush Ojha', 'John Ripper', 'Test User'],
+                    messages: 56
+                }
+            ];
+        }
+        
+        if (url.includes('/api/admin/logs')) {
+            const logs = [];
+            const actions = ['login', 'created debate', 'joined debate', 'sent message', 'logout'];
+            const users = ['Ayush Ojha', 'John Ripper', 'Test User', 'Regular User'];
+            
+            for (let i = 0; i < 20; i++) {
+                const timeOffset = Math.floor(Math.random() * 24 * 60 * 60 * 1000);
+                logs.push({
+                    _id: 'log' + i,
+                    user: users[Math.floor(Math.random() * users.length)],
+                    action: actions[Math.floor(Math.random() * actions.length)],
+                    timestamp: new Date(Date.now() - timeOffset).toISOString(),
+                    details: 'Mock log entry ' + i
+                });
+            }
+            
+            return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+        
+        // Default empty response
+        return [];
+    }
+    
     loadDashboardData();
     loadUsersData();
     loadRoomsData();

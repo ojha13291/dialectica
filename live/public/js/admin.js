@@ -464,11 +464,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="mb-3">
                                 <strong>Participants (${participantsCount}):</strong>
                                 <div class="mt-2">
-                                    ${room.participants.map(p => `
-                                        <span class="participant-badge bg-${getRoleColor(p.role)}">
-                                            ${p.username} (${p.role})
-                                        </span>
-                                    `).join('')}
+                                    ${room.participants.map(p => {
+                                        // Handle both string participants and object participants
+                                        if (typeof p === 'string') {
+                                            return `<span class="participant-badge bg-secondary">${p}</span>`;
+                                        } else {
+                                            return `<span class="participant-badge bg-${getRoleColor(p.role)}">${p.username} (${p.role})</span>`;
+                                        }
+                                    }).join('')}
                                 </div>
                             </div>
                         </div>
@@ -497,10 +500,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function getRoleColor(role) {
+        if (!role) return 'secondary';
+        
         switch (role.toLowerCase()) {
             case 'moderator': return 'danger';
             case 'debater': return 'primary';
             case 'spectator': return 'info';
+            case 'admin': return 'danger';
             default: return 'secondary';
         }
     }

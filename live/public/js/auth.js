@@ -31,13 +31,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const socketUrl = window.appConfig ? window.appConfig.socketUrl : 'http://localhost:5000';
-        const socket = io(socketUrl, {
-            transports: ['websocket', 'polling'],
-            reconnectionAttempts: 5,
-            auth: {
-                token: token
-            }
-        });
+        
+        // Get Socket.io options from config if available
+        const socketOptions = window.appConfig && window.appConfig.socketOptions ? 
+            window.appConfig.socketOptions : {
+                transports: ['websocket', 'polling'],
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000,
+                timeout: 20000
+            };
+            
+        // Add auth token to options
+        socketOptions.auth = {
+            token: token
+        };
+        
+        // Initialize Socket.io with the URL and options
+        const socket = io(socketUrl, socketOptions);
         
         socket.on('connect_error', (err) => {
             console.error('Socket connection error:', err.message);

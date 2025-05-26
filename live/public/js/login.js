@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     try {
-      const apiBaseUrl = 'https://dialectica.onrender.com';
+      const apiBaseUrl = 'https://dialectica-seven.vercel.app';
       const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
         method: 'POST',
         headers: {

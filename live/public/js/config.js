@@ -1,8 +1,8 @@
 const config = {
-  // Vercel deployment URL - update this after deployment with your actual URL
-  apiBaseUrl: 'https://dialectica-vercel.vercel.app',
+  // Actual Vercel deployment URL
+  apiBaseUrl: 'https://dialectica-seven.vercel.app',
   
-  socketUrl: 'https://dialectica-vercel.vercel.app',
+  socketUrl: 'https://dialectica-seven.vercel.app',
   
   // Socket.io connection options for Vercel compatibility
   socketOptions: {

@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return getMockDataForEndpoint(url);
         }
     
-        const apiBaseUrl = 'https://dialectica.onrender.com';
+        const apiBaseUrl = 'https://dialectica-seven.vercel.app';
         const fullUrl = url.startsWith('http') ? url : `${apiBaseUrl}${url}`;
 
         const headers = {

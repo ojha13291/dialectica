@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         };
         
         try {
-            const apiBaseUrl = 'https://dialectica.onrender.com';
+            const apiBaseUrl = 'https://dialectica-seven.vercel.app';
             const response = await fetch(`${apiBaseUrl}/api/profile`, {
                 method: 'PUT',
                 headers: {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             updateAvatarPreview(base64Image);
             
-            const response = await fetch('https://dialectica.onrender.com/api/profile/avatar', {
+            const response = await fetch('https://dialectica-seven.vercel.app/api/profile/avatar', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     
     async function fetchProfileData() {
-        const apiBaseUrl = 'https://dialectica.onrender.com';
+        const apiBaseUrl = 'https://dialectica-seven.vercel.app';
         const response = await fetch(`${apiBaseUrl}/api/profile`, {
             method: 'GET',
             headers: {
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     async function fetchUserStats() {
         try {
-            const apiBaseUrl = 'https://dialectica.onrender.com';
+            const apiBaseUrl = 'https://dialectica-seven.vercel.app';
             const response = await fetch(`${apiBaseUrl}/api/stats`, {
                 method: 'GET',
                 headers: {

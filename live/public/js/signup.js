@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const apiBaseUrl = window.appConfig ? window.appConfig.apiBaseUrl : 'http://localhost:5000';
+      const response = await fetch(`${apiBaseUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

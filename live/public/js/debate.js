@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function toggleMicrophone() {
         if (!isMicActive) {
-            // If first time, set up audio
+         
             if (!audioContext) {
                 const success = await setupAudio();
                 if (!success) return;
@@ -883,7 +883,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = buffer.getChannelData(0);
             
             for (let i = 0; i < bufferSize; i++) {
-                // Create a pattern of beeps
+            
                 const t = i / fallbackContext.sampleRate;
                 const isBeeping = Math.floor(t * 4) % 2 === 0;
                 if (isBeeping) {

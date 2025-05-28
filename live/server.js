@@ -12,16 +12,16 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Allow all origins in production for Vercel deployment
+    origin: "*", 
     methods: ["GET", "POST"],
     credentials: true
   },
-  // Configure transports with polling fallback for Vercel
+
   transports: ['websocket', 'polling'],
-  // Increase timeouts for better connection stability
+
   pingTimeout: 60000,
   pingInterval: 25000,
-  // Connection retry settings
+
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000

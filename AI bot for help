@@ -1,0 +1,135 @@
+<div id="ai-bot-toggle">🤖</div>
+<div id="ai-bot-panel">
+    <div id="ai-bot-header">Dialectica Assistant ✨</div>
+    <div id="ai-bot-messages"></div>
+    <div class="quick-replies">
+        <div class="quick-reply" data-reply="Show me around">Show me around</div>
+        <div class="quick-reply" data-reply="Trial debate">Trial debate</div>
+        <div class="quick-reply" data-reply="Explain features">Explain features</div>
+    </div>
+    <div id="ai-bot-input">
+        <input placeholder="Ask me anything..." />
+        <button>➤</button>
+    </div>
+</div>
+<style>
+    #ai-bot-toggle {
+        position: fixed; bottom: 20px; right: 20px;
+        background: #4e54c8; color: white;
+        border-radius: 50%; width: 60px; height: 60px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 26px; z-index: 9999;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        transition: transform 0.2s;
+    }
+    #ai-bot-toggle:hover { transform: scale(1.1); }
+    #ai-bot-panel {
+        position: fixed; bottom: 90px; right: 20px;
+        width: 340px; height: 440px;
+        background: white; border-radius: 20px;
+        display: none; flex-direction: column;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden; z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from {opacity:0; transform: translateY(20px);} to {opacity:1; transform: translateY(0);} }
+    #ai-bot-header {
+        background: #4e54c8; color: white;
+        padding: 12px; text-align: center;
+        font-weight: bold; font-size: 15px;
+    }
+    #ai-bot-messages {
+        flex: 1; padding: 12px; overflow-y: auto; font-size: 14px;
+        background: #f9f9ff;
+        display: flex; flex-direction: column;
+    }
+    .msg {
+        max-width: 75%; padding: 8px 12px; margin: 6px 0;
+        border-radius: 14px; line-height: 1.4;
+        word-wrap: break-word;
+    }
+    .bot { background: #f1f3ff; align-self: flex-start; border: 1px solid #e0e0ff; }
+    .user { background: #e0e7ff; align-self: flex-end; }
+    #ai-bot-input {
+        display: flex; border-top: 1px solid #eee; background: white;
+    }
+    #ai-bot-input input {
+        flex: 1; border: none; padding: 12px; font-size: 14px; outline: none;
+    }
+    #ai-bot-input button {
+        background: #4e54c8; color: white; border: none; padding: 0 16px;
+        cursor: pointer; font-size: 16px; border-radius: 0 0 20px 0;
+    }
+    .quick-replies {
+        display: flex; flex-wrap: wrap; gap: 8px; padding: 10px;
+        background: white; border-top: 1px solid #eee;
+    }
+    .quick-reply {
+        background-color: #e9ecef; padding: 5px 10px; border-radius: 15px;
+        font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s;
+    }
+    .quick-reply:hover { background-color: #dee2e6; }
+</style>
+<script>
+    const toggle = document.getElementById("ai-bot-toggle");
+    const panel = document.getElementById("ai-bot-panel");
+    const messages = document.getElementById("ai-bot-messages");
+    const input = document.querySelector("#ai-bot-input input");
+    const sendBtn = document.querySelector("#ai-bot-input button");
+    const quickReplies = document.querySelectorAll(".quick-reply");
+
+    function addMsg(text, from="bot"){
+        const el = document.createElement("div");
+        el.className = `msg ${from}`;
+        el.innerText = text;
+        messages.appendChild(el);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function askBot(question){
+        addMsg(question, "user");
+        // Typing indicator
+        const typingIndicator = document.createElement("div");
+        typingIndicator.className = "msg bot";
+        typingIndicator.id = "typing-indicator";
+        typingIndicator.innerHTML = "<i>Typing...</i>";
+        messages.appendChild(typingIndicator);
+        messages.scrollTop = messages.scrollHeight;
+        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+        document.getElementById("typing-indicator")?.remove();
+        let response = generateResponse(question);
+        addMsg(response);
+    }
+
+    function generateResponse(question) {
+        question = question.toLowerCase();
+        if (question.includes('hello') || question.includes('hi') || question.includes('hey')) {
+            return "Hello! I'm Dialectica, your debate assistant. I can help you navigate the platform, explain features, or run a trial debate with you. What would you like to do?";
+        }
+        if (question.includes('show me around') || question.includes('tour') || question.includes('guide')) {
+            return "I'd be happy to show you around! DebateHub has several key areas:\n\n1. The main debate room where live discussions happen\n2. AI topic generator for inspiration\n3. Active rooms list to join ongoing debates\n4. Practice areas to debate against AI or other users\n5. Room creation tool to start your own debate\n\nWould you like me to explain any of these in more detail?";
+        }
+        if (question.includes('trial') || question.includes('practice') || question.includes('demo')) {
+            return "Great! Let's do a trial debate. I'll propose a topic: 'Should schools teach coding from elementary school?'\n\nI'll take the PRO position: Coding teaches logical thinking and problem-solving skills that are valuable regardless of career path. It also prepares students for a technology-driven future.\n\nWhat's your position? Would you like to argue for or against this proposition?";
+        }
+        if (question.includes('feature') || question.includes('explain') || question.includes('how')) {
+            return "DebateHub has several key features:\n\n• Multiple Rooms: Join different debates on various topics\n• AI Topics: Get AI-generated debate ideas when you need inspiration\n• User vs User: Challenge others to one-on-one debates\n• AI Debate: Practice against our AI opponent\n• Content Filtering: Automatic inappropriate language detection\n• Room Creation: Start your own debate on any topic\n\nWhich feature would you like to know more about?";
+        }
+        if (question.includes('tip') || question.includes('advice') || question.includes('improve')) {
+            return "Here are some debate tips:\n\n1. Always research both sides of an argument\n2. Use evidence to support your claims\n3. Stay respectful even when disagreeing\n4. Practice active listening to understand opponents\n5. Structure your arguments clearly (claim, evidence, impact)\n6. Manage your time effectively during speeches\n\nWould you like tips on a specific aspect of debating?";
+        }
+        return "I'm not sure I understand. I can show you around the platform, explain features, or run a trial debate with you. Which would you prefer?";
+    }
+
+    toggle.onclick = () => panel.style.display = panel.style.display === "flex" ? "none" : "flex";
+    sendBtn.onclick = () => { if(input.value.trim()) { askBot(input.value); input.value=""; } };
+    input.onkeydown = (e) => { if(e.key === "Enter" && input.value.trim()) { askBot(input.value); input.value=""; } };
+    quickReplies.forEach(reply => {
+        reply.addEventListener('click', () => {
+            askBot(reply.getAttribute('data-reply'));
+        });
+    });
+    // Initial greeting
+    addMsg("👋 Hi there! I'm Dialectica, your debate guide. I can show you around this site or give you a mini trial debate. What would you like to try first?");
+</script>
